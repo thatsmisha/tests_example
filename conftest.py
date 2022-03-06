@@ -73,8 +73,8 @@ def driver_mobile(request):
             report_1 = report[report.find("driver"):report.rfind("_ _ _ _ _ _")]  # from 'driver' to '_ _ _' - to track an error
             report_2 = report[report.rfind("E "):]  # from 'E  ' to the end
             report = report_1 + '\n' + report_2
-        test_info_log = 'Test has been performed: ' + request.node.name + '\n' + '\n' + 'Result: ' + request.node.rep_call.outcome + '\n' + '\n' + 'Device: ' + device + '\n' + '\n' + 'Error report: ' + ' \n' + report
-        test_info_telegram = 'Test has been performed: ' + request.node.name + '\n' + '\n' + 'Result: ' + request.node.rep_call.outcome + '\n' + '\n' + 'Device: ' + device + '\n' + '\n' + 'Error report: ' + ' \n' + report
+        test_info_log = 'Test has been performed: ' + request.node.name + '\n' + 'Result: ' + request.node.rep_call.outcome + '\n' + 'Device: ' + device + '\n' + 'Error report: ' + ' \n' + report
+        test_info_telegram = 'Test has been performed: ' + request.node.name + '\n' + 'Result: ' + request.node.rep_call.outcome + '\n' + 'Device: ' + device + '\n' + 'Error report: ' + ' \n' + report
         try:
             allure.attach(
                 driver.get_screenshot_as_png(),
@@ -84,7 +84,7 @@ def driver_mobile(request):
         except:
             pass
     else:
-        test_info_log = 'Test has been performed: ' + request.node.name + '\n' + '\n' + 'Result: ' + request.node.rep_call.outcome + '\n' + '\n' + 'Device: ' + device
+        test_info_log = 'Test has been performed: ' + request.node.name + '\n' + 'Result: ' + request.node.rep_call.outcome + '\n' + 'Device: ' + device
         test_info_telegram = test_info_log
     print(test_info_log)
     for x in range(0, len(test_info_telegram), 4096):  # dividing into 4096 len messages: take 0, mess = [0;4096], send -> take  4096 (step) => 4096, mess = [4097;8193], send
@@ -92,6 +92,39 @@ def driver_mobile(request):
         send_telegram(final_test_message_telegram)
     print("\nclose app..")
     driver.quit()
+
+@pytest.fixture(scope="function")
+def driver_api(request):
+    # browser = None
+    start_test_message = 'Test has been started: ' + request.node.name + '\n'
+    print(start_test_message)   # logging
+    send_telegram(start_test_message)
+    print('Test starts: ', time.ctime())   # logging
+
+    yield driver_api
+
+    if request.node.rep_call.failed:
+        fail_text = 'TEST FAILED'
+        send_telegram(fail_text)
+        report = request.node.rep_call.longreprtext
+        if 'AssertionError' in report:    # from report - necessary part
+            report_1 = report[report.find("driver"):report.rfind("_ _ _ _ _ _")]  # from 'driver' to '_ _ _' - to track an error
+            report_2 = report[report.find("AssertionError"):]  # from 'AssertionError' to the end
+            report = report_1 + '\n' + report_2
+        elif 'AssertionError' not in report:
+            report_1 = report[report.find("driver"):report.rfind("_ _ _ _ _ _")]  # from 'driver' to '_ _ _' - to track an error
+            report_2 = report[report.rfind("E "):]  # from 'E  ' to the end
+            report = report_1 + '\n' + report_2
+        test_info_log = 'Test has been performed: ' + request.node.name + '\n' + 'Result: ' + request.node.rep_call.outcome + '\n' + 'Error report: ' + ' \n' + report
+        test_info_telegram = 'Test has been performed: ' + request.node.name + '\n' + 'Result: ' + request.node.rep_call.outcome + '\n' + 'Error report: ' + ' \n' + report
+    else:
+        test_info_log = 'Test has been performed: ' + request.node.name + '\n' + '\n' + 'Result: ' + request.node.rep_call.outcome + '\n'
+        test_info_telegram = test_info_log
+    print(test_info_log)
+    for x in range(0, len(test_info_telegram), 4096):  # dividing into 4096 len messages: take 0, mess = [0;4096], send -> take  4096 (step) => 4096, mess = [4097;8193], send
+        final_test_message_telegram = test_info_telegram[x: x + 4096]
+        send_telegram(final_test_message_telegram)
+
 
 def pytest_sessionfinish(session):  # final message after session - results
     reporter = session.config.pluginmanager.get_plugin('terminalreporter')

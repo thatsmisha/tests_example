@@ -12,9 +12,9 @@ class BasePage:
 
     def start_app(self):
         self.wait_for_element_appear(*BasePageLocators.START_BUTTON, timeout=5)
-        self.driver.find_element(*BasePageLocators.START_BUTTON).click()
+        self.driver.find_element(*BasePageLocators.START_BUTTON).click()  # click on the first start button
         self.wait_for_element_appear(*BasePageLocators.END_BUTTON, timeout=5)
-        self.driver.find_element(*BasePageLocators.END_BUTTON).click()
+        self.driver.find_element(*BasePageLocators.END_BUTTON).click()  # click on the second start button
 
     # ------------- Go to --------------------
 

@@ -8,6 +8,7 @@ from TJournal.pages.add_page import AddPage
 @pytest.mark.TestMainPage
 class TestMainPage:
 
+    @pytest.mark.tjournal
     @pytest.mark.mobile
     @allure.feature('MainPage')
     @allure.story('Check - Main page has been opened')
@@ -18,6 +19,7 @@ class TestMainPage:
         page = MainPage(driver_mobile)
         page.is_main_page_header_appeared()  # Check
 
+    @pytest.mark.tjournal
     @pytest.mark.mobile
     @allure.feature('MainPage')
     @allure.story('Check - Main page has been opened after add page')
@@ -33,6 +35,7 @@ class TestMainPage:
 @pytest.mark.TestAddPage
 class TestAddPage:
 
+    @pytest.mark.tjournal
     @pytest.mark.mobile
     @allure.feature('AddPage')
     @allure.story('Check - Add page has been opened')
@@ -47,6 +50,7 @@ class TestAddPage:
 @pytest.mark.TestSearchPage
 class TestSearchPage:
 
+    @pytest.mark.tjournal
     @pytest.mark.mobile
     @allure.feature('SearchPage')
     @allure.story('Check - Search page has been opened')
@@ -58,6 +62,7 @@ class TestSearchPage:
         page = SearchPage(driver_mobile)
         page.is_search_page_header_appeared()  # Check
 
+    @pytest.mark.tjournal
     @pytest.mark.mobile
     @allure.feature('SearchPage')
     @allure.story('Check - Input text is in the field')
