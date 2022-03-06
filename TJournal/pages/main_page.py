@@ -9,4 +9,3 @@ class MainPage(BasePage):
         assert header == 'Лента', 'Main page has not been opened'
 
 
-

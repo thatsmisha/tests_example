@@ -8,11 +8,24 @@ class BasePage:
         self.driver = driver_mobile
         self.driver.implicitly_wait(timeout)
 
+    # --------------- Start ------------------
+
     def start_app(self):
         self.wait_for_element_appear(*BasePageLocators.START_BUTTON, timeout=5)
         self.driver.find_element(*BasePageLocators.START_BUTTON).click()
         self.wait_for_element_appear(*BasePageLocators.END_BUTTON, timeout=5)
         self.driver.find_element(*BasePageLocators.END_BUTTON).click()
+
+    # ------------- Go to --------------------
+
+    def go_to_main_page(self):
+        self.driver.find_element(*BasePageLocators.MAIN_PAGE_BUTTON).click()
+
+    def go_to_search_page(self):
+        self.driver.find_element(*BasePageLocators.SEARCH_PAGE_BUTTON).click()
+
+    def go_to_add_page(self):
+        self.driver.find_element(*BasePageLocators.ADD_PAGE_BUTTON).click()
 
     # ---------------- Wait for element appearance/disappearance/enable ------------------
 
