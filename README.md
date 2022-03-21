@@ -1,1 +1,1 @@
-Примеры работ (автотесты mobile и api, составлены для резюме)
+Examples (Mobile and API autotests, created for CV)
